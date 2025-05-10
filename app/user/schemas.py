@@ -13,6 +13,9 @@ class UserRead(UserCreate):
     created_at: datetime
     updated_at: datetime
 
+    class Config:
+        from_attributes = True
+
 
 class UserUpdate(BaseModel):
     name: str | None = None

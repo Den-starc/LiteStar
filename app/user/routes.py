@@ -3,7 +3,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.user.models import User
 from app.user.schemas import UserCreate, UserRead, UserUpdate
-from uuid import UUID
 
 
 class UserController(Controller):
@@ -14,7 +13,11 @@ class UserController(Controller):
 
     @post()
     async def create_user(self, data: UserCreate, db_session: AsyncSession) -> UserRead:
-        user = User(name=data.name, email=data.email)
+        user = User(
+            name=data.name,
+            surname=data.surname,
+            password=data.password
+        )
         db_session.add(user)
         await db_session.commit()
         await db_session.refresh(user)
@@ -26,15 +29,15 @@ class UserController(Controller):
         users = result.scalars().all()
         return [UserRead.model_validate(user) for user in users]
 
-    @get("/{user_id:uuid}")
-    async def get_user(self, user_id: UUID, db_session: AsyncSession) -> UserRead:
+    @get("/{user_id:int}")
+    async def get_user(self, user_id: int, db_session: AsyncSession) -> UserRead:
         user = await db_session.get(User, user_id)
         if not user:
             raise ValueError("User not found")
         return UserRead.model_validate(user)
 
-    @put("/{user_id:uuid}")
-    async def update_user(self, user_id: UUID, data: UserUpdate, db_session: AsyncSession) -> UserRead:
+    @put("/{user_id:int}")
+    async def update_user(self, user_id: int, data: UserUpdate, db_session: AsyncSession) -> UserRead:
         user = await db_session.get(User, user_id)
         if not user:
             raise ValueError("User not found")
@@ -44,8 +47,8 @@ class UserController(Controller):
         await db_session.refresh(user)
         return UserRead.model_validate(user)
 
-    @delete("/{user_id:uuid}")
-    async def delete_user(self, user_id: UUID, db_session: AsyncSession) -> None:
+    @delete("/{user_id:int}")
+    async def delete_user(self, user_id: int, db_session: AsyncSession) -> None:
         user = await db_session.get(User, user_id)
         if not user:
             raise ValueError("User not found")
