@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "littestar-user-api"
+version = "0.1.0"
+description = "User CRUD API on LiteStar"
+authors = ["Denis S."]
+package-mode = false
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+python-dotenv = "^1.0.1"
+pydantic = "^2.11.4"
+litestar = { version = "^2.4.2", extras = ["standard"] }
+litestar-granian = "^0.12.3"
+litestar-asyncpg = "^0.3.0"
+advanced-alchemy = "^1.4.2"
+msgspec = "^0.19.0"
+psycopg2-binary = "^2.9.10"
+
+[tool.poetry.group.dev.dependencies]
+uvicorn = "^0.34.2"
+alembic = "^1.15.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
